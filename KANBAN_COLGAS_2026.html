@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRÁFICO COLGAS 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#FFE600;--k:#0A0A0A;--w:#FFFFFF;--off:#F7F6F2;--lt:#EFEFEB;--bd:#E0DFD8;--bd2:#CBCAC2;--mu:#9B9A94;--dmu:#6B6A64;--red:#D93025;--org:#E8760A;--grn:#1A7F4B;--blu:#3B82F6;--pur:#7B3FA0;--tel:#0E7490}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--w);color:var(--k);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+
+header{background:var(--k);display:flex;align-items:stretch;height:68px;position:sticky;top:0;z-index:200;border-bottom:4px solid var(--y)}
+.hbrand{display:flex;align-items:center;gap:14px;padding:0 28px;border-right:1px solid #222}
+.htb{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:5px;color:var(--y);line-height:1}
+.hdiv{width:1px;height:30px;background:#333}
+.hinfo{display:flex;flex-direction:column;gap:2px}
+.htitle{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--w);line-height:1}
+.hwk{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:#555;text-transform:uppercase}
+.htabs{display:flex;align-items:stretch;margin-left:32px}
+.htab{background:transparent;border:none;border-bottom:3px solid transparent;color:#555;padding:0 22px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.htab:hover{color:#aaa}
+.htab.active{color:var(--y);border-bottom-color:var(--y)}
+.hstats{display:flex;align-items:stretch;margin-left:auto;border-left:1px solid #222}
+.hstat{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 18px;border-right:1px solid #222;gap:1px}
+.hstat-n{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:var(--y)}
+.hstat-l{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:2px;color:#555;text-transform:uppercase}
+.hlck{display:flex;align-items:center;gap:8px;padding:0 22px;background:transparent;border:none;color:#555;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:color .15s;white-space:nowrap}
+.hlck:hover{color:var(--y)}
+.hlck.on{color:var(--y)}
+.ldot{width:8px;height:8px;border-radius:50%;background:#333;transition:background .15s}
+.hlck.on .ldot{background:var(--y)}
+
+.toolbar{background:var(--off);border-bottom:1px solid var(--bd);padding:10px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tsep{width:1px;height:22px;background:var(--bd2);margin:0 4px}
+.tlbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--mu);text-transform:uppercase}
+.flt{background:transparent;border:1px solid var(--bd2);color:var(--dmu);padding:5px 11px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .12s;text-transform:uppercase}
+.flt:hover{background:var(--k);color:var(--w);border-color:var(--k)}
+.flt.active{background:var(--k);color:var(--y);border-color:var(--k)}
+.flt.fa{color:var(--red);border-color:rgba(217,48,37,.3)}.flt.fa.active{background:var(--red);color:#fff;border-color:var(--red)}
+.flt.fm{color:var(--org);border-color:rgba(232,118,10,.3)}.flt.fm.active{background:var(--org);color:#fff;border-color:var(--org)}
+.flt.fb{color:var(--grn);border-color:rgba(26,127,75,.3)}.flt.fb.active{background:var(--grn);color:#fff;border-color:var(--grn)}
+.rsel{background:var(--w);border:1px solid var(--bd2);color:var(--dmu);padding:5px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;outline:none;cursor:pointer}
+.rsel:focus{border-color:var(--k)}
+.srch{margin-left:auto;background:var(--w);border:1px solid var(--bd2);color:var(--k);padding:6px 12px;font-family:'DM Mono',monospace;font-size:10px;width:220px;outline:none}
+.srch:focus{border-color:var(--k)}
+.srch::placeholder{color:var(--mu)}
+
+.view{display:none}.view.active{display:block}
+
+/* KANBAN */
+.board{padding:20px 24px;display:flex;gap:14px;align-items:flex-start;min-height:calc(100vh - 130px);overflow-x:auto}
+.col{flex:0 0 268px;min-width:268px;background:var(--off);border:1px solid var(--bd);border-top:3px solid var(--bd2);display:flex;flex-direction:column;max-height:calc(100vh - 155px);transition:border-color .15s,box-shadow .15s}
+.col.drag-over{border-color:var(--k);box-shadow:0 0 0 2px var(--y)}
+.col-hd{padding:12px 14px 10px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;background:var(--off)}
+.chd-l{display:flex;align-items:center;gap:8px}
+.cpip{width:8px;height:8px;border-radius:50%}
+.cnm{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dmu);font-weight:500}
+.cct{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--k);line-height:1}
+.cadd{background:transparent;border:1px dashed var(--bd2);color:var(--mu);width:22px;height:22px;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .12s}
+.cadd:hover{border-color:var(--k);color:var(--k)}
+body.pm .cadd{display:flex}
+.cbody{padding:10px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px}
+.cbody::-webkit-scrollbar{width:2px}
+.cbody::-webkit-scrollbar-thumb{background:var(--bd2)}
+
+.cola .cpip{background:#B0AFA8}.cola{border-top-color:#B0AFA8}
+.colb .cpip{background:var(--blu)}.colb{border-top-color:var(--blu)}
+.colc .cpip{background:var(--org)}.colc{border-top-color:var(--org)}
+.cold .cpip{background:var(--pur)}.cold{border-top-color:var(--pur)}
+.cole .cpip{background:var(--tel)}.cole{border-top-color:var(--tel)}
+.colf .cpip{background:var(--grn)}.colf{border-top-color:var(--grn)}
+
+.card{background:var(--w);border:1px solid var(--bd);border-left:3px solid var(--bd2);padding:11px 11px 9px;cursor:default;transition:box-shadow .12s,transform .12s;animation:cin .18s ease}
+@keyframes cin{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+body.pm .card{cursor:grab}
+body.pm .card:hover{box-shadow:0 2px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
+.card.dragging{opacity:.3;cursor:grabbing}
+.card.alta{border-left-color:var(--red)}.card.media{border-left-color:var(--org)}.card.baja{border-left-color:var(--grn)}
+.cnum{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:1px;margin-bottom:5px}
+.cname{font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--k);line-height:1.35;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px}
+.cchips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.chp{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.5px;padding:2px 6px;text-transform:uppercase;font-weight:500;border:1px solid}
+.chp.alta{color:var(--red);border-color:rgba(217,48,37,.3);background:rgba(217,48,37,.06)}
+.chp.media{color:var(--org);border-color:rgba(232,118,10,.3);background:rgba(232,118,10,.06)}
+.chp.baja{color:var(--grn);border-color:rgba(26,127,75,.3);background:rgba(26,127,75,.06)}
+.chr{background:var(--k);color:var(--y);font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;letter-spacing:.5px;text-transform:uppercase;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cdates{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--bd);padding-top:6px;margin-top:2px}
+.cdrow{display:flex;gap:6px;align-items:baseline}
+.cdl{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;min-width:42px}
+.cdv{font-family:'DM Mono',monospace;font-size:9px;color:var(--dmu)}
+.cdv.hi{color:var(--k);font-weight:600}
+.cobs{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;font-family:'DM Mono',monospace;font-size:8px;padding:4px 6px;margin-top:6px;line-height:1.35;display:block}
+.cfoot{display:flex;justify-content:flex-end;gap:4px;margin-top:6px}
+.cbtn{background:transparent;border:1px solid var(--bd);color:var(--mu);width:22px;height:22px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.cbtn:hover{border-color:var(--k);color:var(--k)}
+.cbtn.del:hover{border-color:var(--red);color:var(--red)}
+.cbtns{display:none}
+body.pm .cbtns{display:flex;gap:4px}
+.cempty{border:1px dashed var(--bd);color:var(--mu);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-align:center;padding:18px;text-transform:uppercase}
+
+/* HEATMAP */
+.hmwrap{padding:24px}
+.hmtitle{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--k);margin-bottom:4px}
+.hmsub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;margin-bottom:24px}
+.hmgwrap{overflow-x:auto}
+.hmg{border:1px solid var(--bd);border-collapse:collapse;width:100%;min-width:820px}
+.hmg th,.hmg td{border:1px solid var(--bd);text-align:center;vertical-align:middle}
+.hmg th{background:var(--k);color:var(--y);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:10px 12px;white-space:nowrap}
+.hmg th.rth{background:var(--off);color:var(--k);text-align:left;min-width:170px;font-size:9px}
+.rth{padding:0 !important}
+.rthi{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.ravt{width:30px;height:30px;background:var(--k);color:var(--y);font-family:'Bebas Neue',sans-serif;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rnm{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--k)}
+.rtot{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:1px}
+.hcell{padding:8px 6px;min-width:80px;cursor:pointer;transition:filter .12s;position:relative}
+.hcell:hover{filter:brightness(.9)}
+.hn{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;display:block}
+.hpct{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;opacity:.7;display:block;margin-top:1px}
+.trow td{background:var(--k) !important;color:var(--y) !important;font-family:'Bebas Neue',sans-serif;font-size:22px;padding:8px}
+.trow .rth{text-align:left;font-size:10px;letter-spacing:2px;font-family:'DM Mono',monospace}
+
+.hmcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:24px}
+.pc{background:var(--off);border:1px solid var(--bd);padding:16px 16px 14px;position:relative;overflow:hidden}
+.pc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.pc.alta::before{background:var(--red)}.pc.media::before{background:var(--org)}.pc.baja::before{background:var(--grn)}
+.pcnm{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.pcn{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;margin-bottom:10px}
+.pbars{display:flex;flex-direction:column;gap:4px}
+.pbr{display:flex;align-items:center;gap:8px}
+.pbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.5px;text-transform:uppercase;color:var(--mu);min-width:18px}
+.pbt{flex:1;height:4px;background:var(--bd);overflow:hidden}
+.pbf{height:100%;transition:width .3s ease}
+.pbf.alta{background:var(--red)}.pbf.media{background:var(--org)}.pbf.baja{background:var(--grn)}
+.pbn{font-family:'DM Mono',monospace;font-size:9px;color:var(--k);min-width:14px;text-align:right}
+
+/* LEGEND */
+.hmleg{display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.hmleg-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;margin-right:4px}
+.leg-item{display:flex;align-items:center;gap:6px}
+.leg-swatch{width:40px;height:12px;border:1px solid var(--bd)}
+.leg-tx{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--dmu)}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--w);border:1px solid var(--bd);width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);transform:translateY(16px);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0)}
+.mhd{background:var(--k);color:var(--y);padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.mhd h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+.mhd button{background:transparent;border:none;color:#666;font-size:18px;cursor:pointer;transition:color .12s}.mhd button:hover{color:var(--y)}
+.mbd{padding:20px;display:flex;flex-direction:column;gap:14px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mu);text-transform:uppercase}
+.fg input,.fg select,.fg textarea{background:var(--off);border:1px solid var(--bd);color:var(--k);padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:vertical;transition:border-color .12s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--k)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mft{padding:14px 20px;border-top:1px solid var(--bd);display:flex;gap:8px;justify-content:flex-end}
+.btnc{background:transparent;border:1px solid var(--bd2);color:var(--dmu);padding:9px 18px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .12s}
+.btnc:hover{border-color:var(--k);color:var(--k)}
+.btns{background:var(--k);border:none;color:var(--y);padding:9px 22px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;font-weight:700;cursor:pointer;text-transform:uppercase;transition:opacity .12s}
+.btns:hover{opacity:.85}
+
+/* PASSWORD */
+.pwdm{width:340px;border:2px solid var(--k)}
+.pwdhd{background:var(--k);padding:28px 20px 20px;text-align:center}
+.pwdtb{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:8px;color:var(--y);line-height:1}
+.pwdhd p{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:3px;color:#555;text-transform:uppercase;margin-top:4px}
+.pwdbd{padding:22px;display:flex;flex-direction:column;gap:12px}
+.pwdbd label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mu);text-transform:uppercase}
+.pwdbd input{background:var(--off);border:1px solid var(--bd);color:var(--k);padding:13px;font-family:'DM Mono',monospace;font-size:18px;letter-spacing:6px;text-align:center;outline:none;width:100%;transition:border-color .12s}
+.pwdbd input:focus{border-color:var(--k)}
+.pwderr{color:var(--red);font-family:'DM Mono',monospace;font-size:9px;text-align:center;letter-spacing:1px;display:none}
+.pwderr.show{display:block}
+.btnul{background:var(--k);border:none;color:var(--y);padding:13px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;width:100%;transition:opacity .12s}
+.btnul:hover{opacity:.87}
+.btnc2{background:transparent;border:none;color:var(--mu);padding:6px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;text-align:center;width:100%;transition:color .12s}
+.btnc2:hover{color:var(--k)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbrand">
+    <div class="htb">TB</div>
+    <div class="hdiv"></div>
+    <div class="hinfo">
+      <div class="htitle">Tráfico Colgas 2026</div>
+      <div class="hwk">Semana · 9 al 13 de Febrero</div>
+    </div>
+  </div>
+  <div class="htabs">
+    <button class="htab active" onclick="switchView('kanban',this)">Kanban</button>
+    <button class="htab" onclick="switchView('heatmap',this)">Mapa de Calor</button>
+  </div>
+  <div class="hstats">
+    <div class="hstat"><div class="hstat-n" id="sT">0</div><div class="hstat-l">Tareas</div></div>
+    <div class="hstat"><div class="hstat-n" id="sA">0</div><div class="hstat-l">Alta</div></div>
+    <div class="hstat"><div class="hstat-n" id="sP">0</div><div class="hstat-l">Pendientes</div></div>
+    <div class="hstat"><div class="hstat-n" id="sD">0</div><div class="hstat-l">Finalizados</div></div>
+  </div>
+  <button class="hlck" id="lbtn" onclick="handleLock()">
+    <div class="ldot"></div>
+    <span id="ltxt">PM LOGIN</span>
+  </button>
+</header>
+
+<div class="toolbar">
+  <span class="tlbl">Prioridad</span>
+  <button class="flt active" onclick="setF('todos',this)">Todos</button>
+  <button class="flt fa" onclick="setF('ALTA',this)">● Alta</button>
+  <button class="flt fm" onclick="setF('MEDIA',this)">● Media</button>
+  <button class="flt fb" onclick="setF('BAJA',this)">● Baja</button>
+  <div class="tsep"></div>
+  <span class="tlbl">Responsable</span>
+  <select class="rsel" id="rsel" onchange="render()"><option value="">Todos</option></select>
+  <input class="srch" id="srch" placeholder="Buscar tarea o responsable…" oninput="render()">
+</div>
+
+<div class="view active" id="v-kanban">
+  <div class="board">
+    <div class="col cola" id="col-PENDIENTE POR ASIGNAR" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">Pendiente Asignar</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-PENDIENTE POR ASIGNAR">0</div><button class="cadd" onclick="openNew('PENDIENTE POR ASIGNAR')">+</button></div></div>
+      <div class="cbody" id="cb-PENDIENTE POR ASIGNAR"></div></div>
+
+    <div class="col colb" id="col-SOLICITADO" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">Solicitado</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-SOLICITADO">0</div><button class="cadd" onclick="openNew('SOLICITADO')">+</button></div></div>
+      <div class="cbody" id="cb-SOLICITADO"></div></div>
+
+    <div class="col colc" id="col-EN PROCESO" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">En Proceso</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-EN PROCESO">0</div><button class="cadd" onclick="openNew('EN PROCESO')">+</button></div></div>
+      <div class="cbody" id="cb-EN PROCESO"></div></div>
+
+    <div class="col cold" id="col-EN REVISIÓN" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">En Revisión</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-EN REVISIÓN">0</div><button class="cadd" onclick="openNew('EN REVISIÓN')">+</button></div></div>
+      <div class="cbody" id="cb-EN REVISIÓN"></div></div>
+
+    <div class="col cole" id="col-ENTREGADO" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">Entregado</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-ENTREGADO">0</div><button class="cadd" onclick="openNew('ENTREGADO')">+</button></div></div>
+      <div class="cbody" id="cb-ENTREGADO"></div></div>
+
+    <div class="col colf" id="col-FINALIZADO" ondragover="dov(event)" ondrop="ddr(event)" ondragleave="dlv(event)">
+      <div class="col-hd"><div class="chd-l"><div class="cpip"></div><div class="cnm">Finalizado</div></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="cct" id="cc-FINALIZADO">0</div><button class="cadd" onclick="openNew('FINALIZADO')">+</button></div></div>
+      <div class="cbody" id="cb-FINALIZADO"></div></div>
+  </div>
+</div>
+
+<div class="view" id="v-heatmap">
+  <div class="hmwrap">
+    <div class="hmtitle">MAPA DE CALOR OPERATIVO</div>
+    <div class="hmsub">Carga de trabajo por responsable × estado · Click en celda para filtrar en Kanban</div>
+    <div class="hmleg" id="hmleg">
+      <span class="hmleg-lbl">Intensidad:</span>
+      <div class="leg-item"><div class="leg-swatch" style="background:#F5F5F2"></div><span class="leg-tx">0</span></div>
+      <div class="leg-item"><div class="leg-swatch" style="background:#D0D0C8"></div><span class="leg-tx">Bajo</span></div>
+      <div class="leg-item"><div class="leg-swatch" style="background:#A0A094"></div><span class="leg-tx">Medio</span></div>
+      <div class="leg-item"><div class="leg-swatch" style="background:#606058"></div><span class="leg-tx">Alto</span></div>
+      <div class="leg-item"><div class="leg-swatch" style="background:#0A0A0A"></div><span class="leg-tx">Máx</span></div>
+    </div>
+    <div class="hmgwrap"><table class="hmg" id="hmg"></table></div>
+    <div style="margin-top:28px">
+      <div class="hmtitle" style="font-size:22px;margin-bottom:4px">CARGA POR RESPONSABLE</div>
+      <div class="hmsub" style="margin-bottom:16px">Desglose de prioridades por integrante del equipo</div>
+      <div class="hmcards" id="hmcards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PWD MODAL -->
+<div class="overlay" id="povl">
+  <div class="modal pwdm">
+    <div class="pwdhd"><div class="pwdtb">TB</div><p>Acceso Project Manager · Colgas 2026</p></div>
+    <div class="pwdbd">
+      <label>Clave de acceso</label>
+      <input type="password" id="pin" placeholder="••••••••" onkeydown="if(event.key==='Enter')chkpwd()">
+      <div class="pwderr" id="perr">⚠ Clave incorrecta</div>
+      <button class="btnul" onclick="chkpwd()">DESBLOQUEAR</button>
+      <button class="btnc2" onclick="cpwd()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARD MODAL -->
+<div class="overlay" id="covl">
+  <div class="modal">
+    <div class="mhd"><h2 id="mtit">NUEVA TAREA</h2><button onclick="ccard()">✕</button></div>
+    <div class="mbd">
+      <div class="fg"><label>Tarea / Descripción</label><input type="text" id="mt" placeholder="Nombre de la tarea..."></div>
+      <div class="fr">
+        <div class="fg"><label>Estado</label><select id="me">
+          <option>PENDIENTE POR ASIGNAR</option><option>SOLICITADO</option><option>EN PROCESO</option>
+          <option>EN REVISIÓN</option><option>ENTREGADO</option><option>FINALIZADO</option>
+        </select></div>
+        <div class="fg"><label>Prioridad</label><select id="mp"><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Responsable</label><input type="text" id="mr" placeholder="Nombre..."></div>
+        <div class="fg"><label>Fecha Tráfico</label><input type="date" id="mft"></div>
+      </div>
+      <div class="fg"><label>Fecha Entrega Cliente</label><input type="date" id="mfc"></div>
+      <div class="fg"><label>Observaciones</label><textarea id="mo" rows="2" placeholder="Notas..."></textarea></div>
+    </div>
+    <div class="mft"><button class="btnc" onclick="ccard()">Cancelar</button><button class="btns" onclick="scard()">Guardar</button></div>
+  </div>
+</div>
+
+<script>
+const INIT=[
+  {id:1,t:"PPT CAMPANA HORECA",e:"SOLICITADO",p:"ALTA",r:"ALVARO",ft:"2026-04-01",fc:"2026-04-13",o:""},
+  {id:2,t:"PPT CAMPANA BAJAS EMISIONES",e:"EN REVISIÓN",p:"ALTA",r:"ANDRES",ft:"2026-04-01",fc:"2026-04-14",o:""},
+  {id:3,t:"PPT DIA DE LAS MADRES",e:"SOLICITADO",p:"ALTA",r:"ANDRES",ft:"2026-03-24",fc:"2026-04-15",o:""},
+  {id:4,t:"AJUSTES PPT MONTACARGAS",e:"SOLICITADO",p:"ALTA",r:"JAIDER",ft:"2026-03-31",fc:"2026-04-13",o:""},
+  {id:5,t:"AJUSTES PIEZA FACTURA INDUSTRIA",e:"SOLICITADO",p:"MEDIA",r:"ANDRES",ft:"2026-04-10",fc:"",o:""},
+  {id:6,t:"DESPLIGUE CAMPAÑA DE SEGURIDAD (50 PIEZAS)",e:"PENDIENTE POR ASIGNAR",p:"ALTA",r:"ANDRES",ft:"",fc:"",o:""},
+  {id:7,t:"KV'S CAMPAÑA DE SEGURIDAD",e:"SOLICITADO",p:"ALTA",r:"WILL",ft:"2026-04-01",fc:"2026-04-13",o:""},
+  {id:8,t:"PPT CORPORATIVA COLGAS",e:"PENDIENTE POR ASIGNAR",p:"ALTA",r:"PTE",ft:"desde 2025",fc:"",o:""},
+  {id:9,t:"AJUSTES LANDING BIG PROMO",e:"EN REVISIÓN",p:"MEDIA",r:"ANDRES",ft:"2026-04-09",fc:"2026-04-10",o:""},
+  {id:10,t:"AJUSTES PARRILLA",e:"PENDIENTE POR ASIGNAR",p:"BAJA",r:"ANDRES",ft:"",fc:"",o:""},
+  {id:11,t:"PEM DE 2022 A 2026",e:"SOLICITADO",p:"MEDIA",r:"ANDRES ESTRATEGIA",ft:"2026-02-16",fc:"2026-04-16",o:""},
+  {id:12,t:"CUADRO DE MATERIALES DE PAUTA",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"LUCHO",ft:"2026-04-13",fc:"2026-04-14",o:""},
+  {id:13,t:"PIEZAS DE PAUTA CUADRO DE MATERIALES",e:"PENDIENTE POR ASIGNAR",p:"BAJA",r:"ANDRES",ft:"2026-04-13",fc:"2026-04-16",o:""},
+  {id:14,t:"ESTRATEGIA COLGAS 2026",e:"SOLICITADO",p:"BAJA",r:"ANDRES ESTRATEGIA",ft:"2026-02-16",fc:"2026-04-16",o:""},
+  {id:15,t:"PARRILLA BIG PROMO",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"RICHIE",ft:"2026-04-13",fc:"",o:""},
+  {id:16,t:"PIEZAS PARRILLA BIG PROMO",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"ANDRES",ft:"2026-04-13",fc:"",o:""},
+  {id:17,t:"ENTREGA VIDEO CADAVID 2",e:"SOLICITADO",p:"ALTA",r:"GERAL",ft:"2026-03-31",fc:"2026-04-15",o:""},
+  {id:18,t:"ENTREGA VIDEO VILLA CLAUDIA",e:"SOLICITADO",p:"MEDIA",r:"GERAL",ft:"2026-04-06",fc:"2026-04-17",o:""},
+  {id:19,t:"ENTREGA VIDEO 3 CADAVID",e:"SOLICITADO",p:"ALTA",r:"GERAL",ft:"2026-03-31",fc:"2026-04-21",o:""},
+  {id:20,t:"CUBRIMIENTO LADRILLERA",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-22",fc:"",o:""},
+  {id:21,t:"ENTREGO VIDEO LADRILLERA",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-22",fc:"2026-04-24",o:""},
+  {id:22,t:"GRABACION VIDEO PANELES SOLARES MOSQUERA",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-15",fc:"",o:""},
+  {id:23,t:"GRABACION VIDEO DESAYUNO",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-23",fc:"",o:""},
+  {id:24,t:"GRABACION 1 VIDEO EN GUATAPE",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-27",fc:"",o:""},
+  {id:25,t:"GRABACION 2 VIDEOS EN MEDELLIN",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-28",fc:"",o:""},
+  {id:26,t:"ENTREGA VIDEO DESAYUNO",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-23",fc:"2026-04-30",o:""},
+  {id:27,t:"ENTREGA VIDEO CLUB BOGOTA GLP",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-03-27",fc:"2026-05-06",o:""},
+  {id:28,t:"ENTREGA VIDEO CENTRO DE SOLUCIONES",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-03-27",fc:"2026-05-11",o:""},
+  {id:29,t:"ENTREGA VIDEO PANELES",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-15",fc:"2026-05-14",o:""},
+  {id:30,t:"ENTREGA VIDEO 4 Y 5 CADAVID",e:"SOLICITADO",p:"ALTA",r:"GERAL",ft:"2026-03-31",fc:"2026-05-22",o:""},
+  {id:31,t:"ENTREGA VIDEO GUATAPE",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-27",fc:"2026-05-29",o:""},
+  {id:32,t:"ENTREGA VIDEOS MEDELLIN",e:"PENDIENTE POR ASIGNAR",p:"MEDIA",r:"GERAL",ft:"2026-04-28",fc:"2026-06-05",o:""},
+  {id:33,t:"ESTRATEGIA DE CONTENIDOS",e:"PENDIENTE POR ASIGNAR",p:"ALTA",r:"SEBAS",ft:"",fc:"",o:"Se esta agendando reunion con cada UEN"},
+  {id:34,t:"TEXTOS FLYER Y TRIPTICO POR UEN CAMPAÑA SEGURIDAD (8 PIEZAS)",e:"SOLICITADO",p:"ALTA",r:"LUCHO",ft:"2026-04-06",fc:"",o:""},
+  {id:35,t:"GRAFICAR FLYER Y TRIPTICO CAMPAÑA SEGURIDAD X UEN (8 PIEZAS)",e:"PENDIENTE POR ASIGNAR",p:"BAJA",r:"ANDRES",ft:"",fc:"",o:""},
+  {id:36,t:"PARRILLA SEGUNDA 15NA ABRIL (MAS CONTENIDOS ANIMADOS)",e:"SOLICITADO",p:"BAJA",r:"RICHIE",ft:"",fc:"2026-04-18",o:""},
+  {id:37,t:"INFORME MARZO PERSONAS",e:"SOLICITADO",p:"BAJA",r:"RICHIE",ft:"2026-04-01",fc:"2026-04-15",o:""},
+  {id:38,t:"CUADRO A CUADRO EXPERIMENTO PROPOSITO PARA AJUSTAR",e:"SOLICITADO",p:"BAJA",r:"LUCHO",ft:"2026-04-06",fc:"",o:""},
+  {id:39,t:"INFORME MARZO SEGURIDAD",e:"SOLICITADO",p:"BAJA",r:"RICHIE",ft:"2026-04-01",fc:"2026-04-15",o:""},
+  {id:40,t:"VIDEO CAMPAÑA DE SEGURIDAD V2",e:"PENDIENTE POR ASIGNAR",p:"BAJA",r:"DAVID",ft:"",fc:"",o:""}
+];
+
+const PWD="TRAFICO2026";
+const COLS=["PENDIENTE POR ASIGNAR","SOLICITADO","EN PROCESO","EN REVISIÓN","ENTREGADO","FINALIZADO"];
+const COL_SCALES={
+  "PENDIENTE POR ASIGNAR":["#F2F1ED","#D5D4CC","#B8B7AD","#8B8A82","#3D3C38"],
+  "SOLICITADO":["#EFF6FF","#DBEAFE","#93C5FD","#3B82F6","#1D4ED8"],
+  "EN PROCESO":["#FFF7ED","#FFEDD5","#FED7AA","#FB923C","#C2410C"],
+  "EN REVISIÓN":["#FAF5FF","#F3E8FF","#D8B4FE","#A855F7","#6B21A8"],
+  "ENTREGADO":["#F0FDFA","#CCFBF1","#5EEAD4","#14B8A6","#0F766E"],
+  "FINALIZADO":["#F0FDF4","#DCFCE7","#86EFAC","#22C55E","#15803D"]
+};
+
+let tasks=[], pm=false, filt='todos', drag=null, eid=null;
+function load(){try{const s=localStorage.getItem('cg26');tasks=s?JSON.parse(s):JSON.parse(JSON.stringify(INIT));}catch(e){tasks=JSON.parse(JSON.stringify(INIT));}}
+function save(){localStorage.setItem('cg26',JSON.stringify(tasks));}
+function nid(){return tasks.length?Math.max(...tasks.map(x=>x.id))+1:1;}
+
+function render(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  const rf=document.getElementById('rsel').value;
+  function ok(x){
+    if(filt!=='todos'&&x.p.trim().toUpperCase()!==filt) return false;
+    if(rf&&x.r.trim().toUpperCase()!==rf) return false;
+    if(q&&!x.t.toLowerCase().includes(q)&&!x.r.toLowerCase().includes(q)) return false;
+    return true;
+  }
+  COLS.forEach(c=>{
+    const el=document.getElementById('cb-'+c);
+    const ct=document.getElementById('cc-'+c);
+    const lst=tasks.filter(x=>x.e.trim().toUpperCase()===c&&ok(x));
+    ct.textContent=lst.length;
+    el.innerHTML=lst.length?lst.map(bcard).join(''):'<div class="cempty">Sin tareas</div>';
+    if(pm){
+      el.querySelectorAll('.card').forEach(cd=>{
+        cd.setAttribute('draggable','true');
+        cd.addEventListener('dragstart',()=>{drag=+cd.dataset.id;setTimeout(()=>cd.classList.add('dragging'),0);});
+        cd.addEventListener('dragend',()=>{cd.classList.remove('dragging');document.querySelectorAll('.col').forEach(c=>c.classList.remove('drag-over'));});
+      });
+    }
+  });
+  stats(); rsel(); rheat();
+}
+
+function bcard(x){
+  const pl=x.p.trim().toLowerCase();
+  return `<div class="card ${pl}" data-id="${x.id}">
+    <div class="cnum">#${String(x.id).padStart(3,'0')}</div>
+    <div class="cname">${x.t}</div>
+    <div class="cchips"><span class="chp ${pl}">${x.p.trim()}</span><span class="chr">${x.r.trim()||'—'}</span></div>
+    <div class="cdates">
+      ${x.ft?`<div class="cdrow"><span class="cdl">Tráfico</span><span class="cdv">${x.ft}</span></div>`:''}
+      ${x.fc?`<div class="cdrow"><span class="cdl">Cliente</span><span class="cdv hi">${x.fc}</span></div>`:''}
+    </div>
+    ${x.o?`<span class="cobs">💬 ${x.o}</span>`:''}
+    <div class="cfoot"><div class="cbtns"><button class="cbtn" onclick="oedit(${x.id})">✎</button><button class="cbtn del" onclick="dcard(${x.id})">✕</button></div></div>
+  </div>`;
+}
+
+function stats(){
+  document.getElementById('sT').textContent=tasks.length;
+  document.getElementById('sA').textContent=tasks.filter(x=>x.p.trim().toUpperCase()==='ALTA').length;
+  document.getElementById('sP').textContent=tasks.filter(x=>x.e.trim().toUpperCase()==='PENDIENTE POR ASIGNAR').length;
+  document.getElementById('sD').textContent=tasks.filter(x=>['ENTREGADO','FINALIZADO'].includes(x.e.trim().toUpperCase())).length;
+}
+function rsel(){
+  const s=document.getElementById('rsel');const cur=s.value;
+  const rr=[...new Set(tasks.map(x=>x.r.trim().toUpperCase()).filter(Boolean))].sort();
+  s.innerHTML='<option value="">Todos</option>'+rr.map(r=>`<option value="${r}" ${cur===r?'selected':''}>${r}</option>`).join('');
+}
+
+function rheat(){
+  const tbl=document.getElementById('hmg');
+  const cards=document.getElementById('hmcards');
+  const resp=[...new Set(tasks.map(x=>x.r.trim().toUpperCase()).filter(Boolean))].sort();
+  const mx={};
+  resp.forEach(r=>{mx[r]={};COLS.forEach(c=>mx[r][c]=0);});
+  tasks.forEach(x=>{const r=x.r.trim().toUpperCase();const c=x.e.trim().toUpperCase();if(mx[r]&&mx[r][c]!==undefined)mx[r][c]++;});
+  const cTot={};COLS.forEach(c=>cTot[c]=tasks.filter(x=>x.e.trim().toUpperCase()===c).length);
+  const cMax={};COLS.forEach(c=>cMax[c]=Math.max(...resp.map(r=>mx[r][c]),1));
+
+  const colLabels={"PENDIENTE POR ASIGNAR":"PENDIENTE","SOLICITADO":"SOLICITADO","EN PROCESO":"PROCESO","EN REVISIÓN":"REVISIÓN","ENTREGADO":"ENTREGADO","FINALIZADO":"FINALIZADO"};
+  let h=`<tr><th class="rth">Responsable</th>${COLS.map(c=>`<th>${colLabels[c]}</th>`).join('')}<th>TOTAL</th></tr>`;
+  resp.forEach(r=>{
+    const tot=Object.values(mx[r]).reduce((a,b)=>a+b,0);
+    h+=`<tr><td class="rth"><div class="rthi"><div class="ravt">${r.slice(0,2)}</div><div><div class="rnm">${r}</div><div class="rtot">${tot} tarea${tot!==1?'s':''}</div></div></div></td>`;
+    COLS.forEach(c=>{
+      const n=mx[r][c];
+      const pct=cMax[c]>0?n/cMax[c]:0;
+      const sc=COL_SCALES[c];
+      const ci=n===0?0:Math.min(Math.floor(pct*4)+1,4);
+      const bg=sc[ci];
+      const dark=ci>=3;
+      const fg=dark?'#fff':'#0A0A0A';
+      const ptot=tot>0?Math.round(n/tot*100):0;
+      h+=`<td class="hcell" style="background:${bg};color:${fg}" onclick="filtHeat('${r}','${c}')">
+        <span class="hn">${n||'–'}</span>${n>0?`<span class="hpct">${ptot}%</span>`:''}
+      </td>`;
+    });
+    h+=`<td style="background:var(--k);color:var(--y);font-family:'Bebas Neue',sans-serif;font-size:24px;padding:8px">${tot}</td></tr>`;
+  });
+  h+=`<tr class="trow"><td class="rth" style="padding:10px 14px !important;color:var(--y)">TOTAL</td>${COLS.map(c=>`<td>${cTot[c]}</td>`).join('')}<td>${tasks.length}</td></tr>`;
+  tbl.innerHTML=h;
+
+  let ch='';
+  resp.forEach(r=>{
+    const rt=tasks.filter(x=>x.r.trim().toUpperCase()===r);
+    const a=rt.filter(x=>x.p.trim().toUpperCase()==='ALTA').length;
+    const m=rt.filter(x=>x.p.trim().toUpperCase()==='MEDIA').length;
+    const b=rt.filter(x=>x.p.trim().toUpperCase()==='BAJA').length;
+    const n=rt.length;
+    const mx2=Math.max(a,m,b,1);
+    const urg=a>0?'alta':m>0?'media':'baja';
+    ch+=`<div class="pc ${urg}" style="cursor:pointer" onclick="filtHeat('${r}','')">
+      <div class="pcnm">${r}</div>
+      <div class="pcn">${n}</div>
+      <div class="pbars">
+        <div class="pbr"><span class="pbl">Alta</span><div class="pbt"><div class="pbf alta" style="width:${a/mx2*100}%"></div></div><span class="pbn">${a}</span></div>
+        <div class="pbr"><span class="pbl">Med</span><div class="pbt"><div class="pbf media" style="width:${m/mx2*100}%"></div></div><span class="pbn">${m}</span></div>
+        <div class="pbr"><span class="pbl">Baja</span><div class="pbt"><div class="pbf baja" style="width:${b/mx2*100}%"></div></div><span class="pbn">${b}</span></div>
+      </div>
+    </div>`;
+  });
+  cards.innerHTML=ch;
+}
+
+function filtHeat(r,c){
+  document.getElementById('rsel').value=r;
+  if(c){ /* switch to kanban and highlight column */}
+  switchView('kanban',document.querySelectorAll('.htab')[0]);
+  render();
+}
+
+function switchView(v,btn){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('v-'+v).classList.add('active');
+  document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function dov(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function dlv(e){e.currentTarget.classList.remove('drag-over');}
+function ddr(e){
+  e.preventDefault();const col=e.currentTarget;col.classList.remove('drag-over');
+  if(!pm||drag===null)return;
+  const cid=col.id.replace('col-','');
+  const x=tasks.find(t=>t.id===drag);
+  if(x){x.e=cid;save();render();}
+  drag=null;
+}
+
+function setF(v,btn){filt=v;document.querySelectorAll('.flt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+
+function handleLock(){
+  if(pm){pm=false;document.body.classList.remove('pm');document.getElementById('ltxt').textContent='PM LOGIN';document.getElementById('lbtn').classList.remove('on');render();}
+  else{document.getElementById('povl').classList.add('open');document.getElementById('pin').value='';document.getElementById('perr').classList.remove('show');setTimeout(()=>document.getElementById('pin').focus(),200);}
+}
+function chkpwd(){
+  if(document.getElementById('pin').value.trim().toUpperCase()===PWD){
+    pm=true;document.body.classList.add('pm');document.getElementById('ltxt').textContent='PM ACTIVO';document.getElementById('lbtn').classList.add('on');cpwd();render();
+  } else {document.getElementById('perr').classList.add('show');document.getElementById('pin').value='';document.getElementById('pin').focus();}
+}
+function cpwd(){document.getElementById('povl').classList.remove('open');}
+
+function openNew(estado){
+  if(!pm)return;eid=null;
+  document.getElementById('mtit').textContent='NUEVA TAREA';
+  document.getElementById('mt').value='';document.getElementById('me').value=estado;
+  document.getElementById('mp').value='MEDIA';document.getElementById('mr').value='';
+  document.getElementById('mft').value='';document.getElementById('mfc').value='';document.getElementById('mo').value='';
+  document.getElementById('covl').classList.add('open');
+}
+function oedit(id){
+  if(!pm)return;const x=tasks.find(t=>t.id===id);if(!x)return;eid=id;
+  document.getElementById('mtit').textContent='EDITAR TAREA';
+  document.getElementById('mt').value=x.t;document.getElementById('me').value=x.e.trim();
+  document.getElementById('mp').value=x.p.trim();document.getElementById('mr').value=x.r;
+  document.getElementById('mft').value=x.ft.length===10?x.ft:'';document.getElementById('mfc').value=x.fc.length===10?x.fc:'';
+  document.getElementById('mo').value=x.o;document.getElementById('covl').classList.add('open');
+}
+function ccard(){document.getElementById('covl').classList.remove('open');}
+function scard(){
+  const t=document.getElementById('mt').value.trim().toUpperCase();if(!t)return;
+  const d={t,e:document.getElementById('me').value,p:document.getElementById('mp').value,
+    r:document.getElementById('mr').value.trim().toUpperCase(),
+    ft:document.getElementById('mft').value,fc:document.getElementById('mfc').value,
+    o:document.getElementById('mo').value.trim()};
+  if(eid){const i=tasks.findIndex(x=>x.id===eid);if(i!==-1)tasks[i]={...tasks[i],...d};}
+  else tasks.push({id:nid(),...d});
+  save();render();ccard();
+}
+function dcard(id){if(!pm||!confirm('¿Eliminar esta tarea?'))return;tasks=tasks.filter(x=>x.id!==id);save();render();}
+
+document.getElementById('povl').addEventListener('click',e=>{if(e.target===e.currentTarget)cpwd();});
+document.getElementById('covl').addEventListener('click',e=>{if(e.target===e.currentTarget)ccard();});
+load();render();
+</script>
+</body>
+</html>
